@@ -1,7 +1,7 @@
 
  window.addEventListener("load", ()=>{
   const headers = document.getElementsByTagName("header");
-  setTimeout(()=>{
+  // setTimeout(()=>{
       //Header Render
       headers[0].classList.remove("d-none");
       headers[1].classList.add("d-none");
@@ -24,7 +24,7 @@
       const reviewsH3 = document.querySelectorAll("#reviews > h3");
       reviewsH3[0].classList.remove("d-none");
       reviewsH3[1].classList.add("d-none");
-  }, 2000);
+  // }, 2000);
  })
 //Responsividade para boxes da section noticias
 const cardBody = document.querySelectorAll("#noticias > .cards > .card > .card-body");
@@ -619,12 +619,13 @@ class Modal {
     }
 
     //Setando imagens e seus subtitulos dentro do artigo
-    images.forEach((elemento, i) => {
+      images.forEach((elemento, i) => {
         elemento.src = this.imagens[i + 1];
-    });
-    subtitles.forEach((elemento, i) => {
+      });
+      subtitles.forEach((elemento, i) => {
         elemento.innerHTML = this.imgSubtitulos[i];
-    });
+      });
+    
   }
 
   montarNota(){
@@ -673,31 +674,28 @@ reviews.forEach((element, index) =>{
 
       function promise(){
         return new Promise((resolve, reject)=>{
-          setTimeout(()=>{
             let modal = new Modal(reviewModais[index].review, reviewModais[index].titulo, reviewModais[index].subtitulo, reviewModais[index].autor,
               reviewModais[index].data ,reviewModais[index].atualizacao, reviewModais[index].conteudo, reviewModais[index].imagens,
               reviewModais[index].imgSubtitulos, reviewModais[index].nota);
+              modal.montarConteudo();
+              modal.montarNota();
               resolve(modal);
               reject("Erro ao carregar review!");
-          },2000)
         })
-      }
+        }
 
-      promise().then((res)=>{
-        res.montarConteudo();
-        res.montarNota();
+      promise().then((response)=>{
+        response.montarConteudo();
+        response.montarNota();
+      }).then(()=>{
+        document.querySelector(".modal-banner > img").onload = function(){
+          spinner.classList.add("d-none");
+          modalOpen.classList.remove("d-none");
+          modalBackdrop.classList.remove("d-none");
+        }
       }).catch((rej)=>{
         alert(rej);
       });
-      
-      async function render(){
-        await promise();
-        spinner.classList.add("d-none");
-        modalOpen.classList.remove("d-none");
-        modalBackdrop.classList.remove("d-none");
-      }
-
-      render();
     })
 })
 
